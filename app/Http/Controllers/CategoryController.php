@@ -13,12 +13,17 @@ class CategoryController extends Controller
      *
      * @return \Illuminate\Http\Response
      */
-    public function index()
+    public function index(Request $request)
     {
-        // Select all records
-        $categories = Category::all();
-
-        // Return them as json response
+        // If it is a search request
+        if ($request->has('search')) {
+            // Search in category table
+            $categories = Category::select()->where('name','like', '%'.$request->search.'%')->simplePaginate(10);
+        } else {
+            // Otherwise Select all records
+            $categories = Category::select()->simplePaginate(10);
+        }
+        // Then return them as json response
         return response()->json($categories);
     }
 
