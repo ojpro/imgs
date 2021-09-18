@@ -4,7 +4,6 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 use App\Models\Category;
-use Illuminate\Validation\Validator;
 
 class CategoryController extends Controller
 {
@@ -16,7 +15,7 @@ class CategoryController extends Controller
     public function index(Request $request)
     {
         // If it is a search request
-        if ($request->has('search')) {
+        if ($request->has('search') && !empty($request->search)) {
             // Search in category table
             $categories = Category::select()->where('name','like', '%'.$request->search.'%')->simplePaginate(10);
         } else {
@@ -83,10 +82,15 @@ class CategoryController extends Controller
         if (!$category) {
             return response()->json(['error' => 'This category does not exists.']);
         }
+
         // Otherwise validate the records
         $request->validate([
-            'name' => 'required|string|unique:categories,name,' . $id . '|max:150|min:3'
+            'name' => 'required|string|unique:categories,name,' . $id . ',id|max:150|min:3'
         ]);
+
+        // Update the category
+        $category->update($request->all());
+
         // Then return a success response
         return response()->json(['success' => 'Category updated successfully.']);
     }
