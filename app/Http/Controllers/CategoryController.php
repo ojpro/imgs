@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 use App\Models\Category;
+use Illuminate\Support\Facades\Validator;
 
 class CategoryController extends Controller
 {
@@ -17,10 +18,10 @@ class CategoryController extends Controller
         // If it is a search request
         if ($request->has('search') && !empty($request->search)) {
             // Search in category table
-            $categories = Category::select()->where('name','like', '%'.$request->search.'%')->simplePaginate(10);
+            $categories = Category::select('id','name')->where('name','like', '%'.$request->search.'%')->get();
         } else {
             // Otherwise Select all records
-            $categories = Category::select()->simplePaginate(10);
+            $categories = Category::select('id','name')->get();
         }
         // Then return them as json response
         return response()->json($categories);
@@ -35,9 +36,14 @@ class CategoryController extends Controller
     public function store(Request $request)
     {
         // Validate Creation Request
-        $request->validate([
+        $validation = Validator::make($request->all(), [
             'name' => 'required|string|unique:categories,name|max:150|min:3'
         ]);
+    
+        // If validation fails return json error
+        if ($validation->fails()) {
+            return response()->json(['errors' => $validation->errors()]);
+        }
 
         // Store new Category Record
         Category::create($request->all());
@@ -83,10 +89,15 @@ class CategoryController extends Controller
             return response()->json(['error' => 'This category does not exists.']);
         }
 
-        // Otherwise validate the records
-        $request->validate([
+        // validate the records
+        $validation = Validator::make($request->all(), [
             'name' => 'required|string|unique:categories,name,' . $id . ',id|max:150|min:3'
         ]);
+    
+        // If validation fails return json error
+        if ($validation->fails()) {
+            return response()->json(['errors' => $validation->errors()]);
+        }
 
         // Update the category
         $category->update($request->all());
