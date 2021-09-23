@@ -1,11 +1,13 @@
 <template>
-  <Header></Header>
+  <div class="dark:bg-gray-800">
+    <Gallery></Gallery>
+  </div>
 </template>
 <script>
-import Header from '@/views/partials/Header.vue'
+import Gallery from "@/views/partials/Gallery.vue";
 export default {
-  components:{
-    Header,
-  }
-}
+  components: {
+    Gallery,
+  },
+};
 </script>
