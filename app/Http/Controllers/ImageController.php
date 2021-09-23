@@ -20,7 +20,8 @@ class ImageController extends Controller
         // Check if it is a search request
         if ($request->has('search') && !empty($request->search)) {
             // Then search in images's label
-            $images = Image::where('label', 'like', '%' . $request->search . '%')->latest()->get();
+            $images = Image::where('label', 'like', '%' . $request->search . '%')
+                ->orWhere('category_name', 'like', '%' . $request->search . '%')->limit(100)->latest()->get();
         } else {
             // Otherwise fetch all images
             $images = Image::latest()->get();
