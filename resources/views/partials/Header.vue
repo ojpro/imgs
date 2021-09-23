@@ -1,43 +1,45 @@
 <template>
-  <header>
+  <header class="sticky top-0 z-10">
     <nav
       class="
         flex flex-row flex-wrap
         justify-between
         items-center
-        py-2
-        px-4
-        shadow-sm
+        p-4
+        shadow
+        bg-white
+        dark:bg-gray-900
       "
     >
       <!-- Logo -->
       <div class="">
-        <h1>IMGS.local</h1>
+        <h1 class="dark:text-white">IMGS.local</h1>
       </div>
       <!-- Search form -->
       <div class="w-5/12 relative">
-        <input
-          type="search"
-          list="names"
-          class="
-            border border-gray-100
-            focus:shadow-sm
-            rounded
-            px-2
-            py-1
-            w-full
-          "
-          placeholder="Search. i.e Car, Rabbit..."
-          v-model="search"
-          @input="fetchCategories($event.target.value)"
-        />
-
-        <datalist id="names" v-show="names" class="absolute">
-          <option
-            v-for="name in names"
-            :key="name.id"
-            :value="name.name"
+        <form action="" method="get">
+          <input
+            type="search"
+            list="images"
+            class="
+              border border-gray-200
+              focus:shadow-sm
+              rounded
+              px-2
+              py-1
+              w-full
+              dark:bg-gray-700
+              dark:border-gray-600
+              dark:text-white
+            "
+            placeholder="Search. i.e Car, Rabbit..."
+            v-model="search"
+            @input="searchforImages($event.target.value)"
           />
+        </form>
+
+        <datalist id="images" v-show="images" class="absolute">
+          <option v-for="image in images" :key="image.id" :value="image.label" />
         </datalist>
       </div>
       <!-- Upload new Image Button -->
@@ -58,19 +60,19 @@ export default {
   name: "Header",
   data() {
     return {
-      names: null,
+      images: '',
       search: "",
     };
   },
   methods: {
-    fetchCategories(search) {
-      axios.get("api/categories?search=" + search).then((res) => {
+    searchforImages(query) {
+      axios.get("api/images?search=" + query).then((res) => {
         if (res.data.length > 1) {
           // Fill names
-          this.names = res.data;
+          this.images = res.data;
         } else {
           // empty the values of categories variable
-          this.names = "";
+          this.images = "";
         }
       });
     },
