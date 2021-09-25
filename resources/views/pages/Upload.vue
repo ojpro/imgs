@@ -1,5 +1,5 @@
 <template>
-  <div class="dark:bg-gray-800 min-h-screen">
+  <div class="min-h-screen">
     <nav>
       <div class="py-2 px-3">
         <router-link to="/" class="text-blue-500 text-md font-medium">
@@ -7,9 +7,9 @@
         </router-link>
       </div>
       <!-- Upload Image Form -->
-      <div class="container">
+      <div class="container mx-auto">
         <div
-          class="shadow rounded mx-auto w-96 mt-16 dark:border-gray-600 border"
+          class="shadow mx-auto rounded w-96 mt-16 dark:border-gray-600 border"
         >
           <h1 class="text-center font-bold text-lg dark:text-white">
             Upload an Image.
@@ -234,7 +234,22 @@ export default {
 
             // Remove errors
             this.errors = "";
-            this.$swal.fire("Success", res.data.success, "success");
+            //  Show success alert
+            const Toast = this.$swal.mixin({
+                toast:true,
+                position:'top-end',
+                showConfirmButton:false,
+                timer:2500,
+                timerProgressBar:true,
+                didOpen:(toast)=>{
+                  toast.addEventListener('mouseenter',this.$swal.stopTimer)
+                  toast.addEventListener('mouseleave',this.$swal.resumeTimer)
+                }
+            })
+            Toast.fire({
+                title:res.data.success,
+                icon: "success"
+            });
           } else {
             this.$swal.fire({
               title: "Something wrong!. Please try again",
@@ -259,6 +274,7 @@ export default {
       if (image.length) {
         this.form.image = image[0];
       }
+      e.target.parentElement.classList.add('border-blue-400','dark:border-blue-400')
     },
   },
 };
