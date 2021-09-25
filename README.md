@@ -18,3 +18,13 @@ Local Images Gallery, where you can store,edit, and delete images. plus many fun
 - Tailwindcss
 - Clipboardjs
 - Sweatalert2
+
+## Screenshots
+### Home page
+![Gallery](Screenshots/gallery.png)
+### Upload page
+![Upload](Screenshots/upload.png)
+### Edit page
+![Edit](Screenshots/edit.png)
+### Slider
+![Slider](Screenshots/slide.png)
