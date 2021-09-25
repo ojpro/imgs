@@ -5,7 +5,9 @@ namespace App\Http\Controllers;
 use App\Models\Image;
 use App\Traits\SaveImage;
 use AshAllenDesign\ShortURL\Classes\Builder;
+use AshAllenDesign\ShortURL\Models\ShortURL;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\File;
 use Illuminate\Support\Facades\Validator;
 
 class ImageController extends Controller
@@ -133,15 +135,21 @@ class ImageController extends Controller
     {
         // Look for the image if is exists
         $image = Image::find($id);
-
+        $image_short_url = ShortURL::findByShortURL($image['url']);
+        $destination_url = explode(config('app.url') . '/', $image_short_url['destination_url']);
+        $image_path = $destination_url[1];
         // if not return an error response
         if (!$image) {
             return response()->json(['error' => 'This image does not exists.']);
         }
-
-        // Finlay delete it.
-        $image->delete();
-
+        // Delete from the storage
+        $delete = File::delete($image_path);
+        if ($delete) {
+            // Then delete from the database
+            $image->delete();
+        } else {
+            return response()->json(['error' => 'Unable to delete this image, Please try again.']);
+        }
         // Return a success response
         return response()->json(['success' => 'Image deleted successfully.']);
     }
