@@ -19,6 +19,7 @@
     "dependencies": {
         "alpinejs": "^3.3.4",
         "vue": "^3.2.6",
+        "vue-clipboard2": "^0.3.3",
         "vue-router": "4",
         "vue-sweetalert2": "^5.0.2"
     }
