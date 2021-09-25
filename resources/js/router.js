@@ -10,6 +10,11 @@ const routes = [
         name: "Upload",
         component: () => import('@/views/pages/Upload.vue'),
     },
+    {
+        path: "/edit/:id(\\d+)?",
+        name: "Edit",
+        component: () => import('@/views/pages/Edit.vue'),
+    },
 ];
 const router = createRouter({
     history: createWebHistory(),
